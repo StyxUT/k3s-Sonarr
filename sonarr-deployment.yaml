@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  labels:
+    app: sonarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      hostNetwork: true
+      containers:
+        - name: sonarr
+          imagePullPolicy: "Always"
+          image: linuxserver/sonarr:latest
+#          ports:
+#          - name: http
+#            containerPort: 8989
+#            protocol: TCP
+          env:
+            - name: TZ
+              value: "America/Denver"
+            - name: PUID
+              value: "1000"
+            - name: GUID
+              value: "1000"
+          volumeMounts:
+            - name: sonarr
+              mountPath: /config
+              subPath: sonarr/config
+            - name: sonarr-media
+              mountPath: /video/TV
+              subPath: TV
+      volumes:
+        - name: sonarr
+          persistentVolumeClaim:
+            claimName: synology-sonarr
+        - name: sonarr-media
+          persistentVolumeClaim:
+            claimName: synology-sonarr-media
