@@ -38,8 +38,7 @@ spec:
               mountPath: /config
               subPath: sonarr/config
             - name: sonarr-media
-              mountPath: /video/TV
-              subPath: TV
+              mountPath: /TV
       volumes:
         - name: sonarr
           persistentVolumeClaim:
