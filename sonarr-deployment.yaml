@@ -17,32 +17,48 @@ spec:
       labels:
         app: sonarr
     spec:
-      hostNetwork: true
+      #hostNetwork: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: multicore
+                operator: NotIn
+                values:
+                - "true"
       containers:
+      - name: sonarr
+        imagePullPolicy: "Always"
+        image: linuxserver/sonarr:latest
+        ports:
+        - name: http
+          containerPort: 8989
+          protocol: TCP
+        env:
+        - name: TZ
+          value: "America/Denver"
+        - name: PUID
+          value: "1000"
+        - name: GUID
+          value: "1000"
+        volumeMounts:
         - name: sonarr
-          imagePullPolicy: "Always"
-          image: linuxserver/sonarr:latest
-#          ports:
-#          - name: http
-#            containerPort: 8989
-#            protocol: TCP
-          env:
-            - name: TZ
-              value: "America/Denver"
-            - name: PUID
-              value: "1000"
-            - name: GUID
-              value: "1000"
-          volumeMounts:
-            - name: sonarr
-              mountPath: /config
-              subPath: sonarr/config
-            - name: sonarr-media
-              mountPath: /TV
+          mountPath: /config
+          subPath: sonarr/config
+        - name: synology-video
+          mountPath: /video/TV
+          subPath: TV
+        - name: synology-torrents
+          mountPath: /torrents/complete
+          subPath: complete
       volumes:
-        - name: sonarr
-          persistentVolumeClaim:
-            claimName: synology-sonarr
-        - name: sonarr-media
-          persistentVolumeClaim:
-            claimName: synology-sonarr-media
+      - name: sonarr
+        persistentVolumeClaim:
+          claimName: synology-sonarr
+      - name: synology-video
+        persistentVolumeClaim:
+          claimName: synology-video
+      - name: synology-torrents
+        persistentVolumeClaim:
+          claimName: synology-torrents
