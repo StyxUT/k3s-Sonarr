@@ -45,15 +45,15 @@ spec:
         - name: UMASK_SET
           value: "022"
         volumeMounts:
-        - name: k8s-pv01
+        - name: k8s-pv02
           mountPath: /config
           subPath: sonarr/config
         - name: data
           mountPath: /data
       volumes:
-      - name: k8s-pv01
+      - name: k8s-pv02
         persistentVolumeClaim:
-          claimName: synology-k8s-pv01
+          claimName: synology-k8s-pv02
       - name: data
         persistentVolumeClaim:
           claimName: synology-data
