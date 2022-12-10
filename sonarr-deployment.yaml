@@ -29,7 +29,7 @@ spec:
 #                - "true"
       containers:
       - name: sonarr
-        imagePullPolicy: "Always"
+        imagePullPolicy: "IfNotPresent"
         image: binhex/arch-sonarr:latest
         ports:
         - name: http
@@ -45,15 +45,15 @@ spec:
         - name: UMASK_SET
           value: "022"
         volumeMounts:
-        - name: k8s-pv02
+        - name: synology-sonarr
           mountPath: /config
           subPath: sonarr/config
         - name: data
           mountPath: /data
       volumes:
-      - name: k8s-pv02
+      - name: synology-sonarr
         persistentVolumeClaim:
-          claimName: synology-k8s-pv02
+          claimName: synology-sonarr
       - name: data
         persistentVolumeClaim:
           claimName: synology-data
