@@ -17,16 +17,6 @@ spec:
       labels:
         app: sonarr
     spec:
-      #hostNetwork: true
-#      affinity:
-#        nodeAffinity:
-#          requiredDuringSchedulingIgnoredDuringExecution:
-#            nodeSelectorTerms:
-#            - matchExpressions:
-#              - key: multicore
-#                operator: NotIn
-#                values:
-#                - "true"
       containers:
       - name: sonarr
         imagePullPolicy: "IfNotPresent"
