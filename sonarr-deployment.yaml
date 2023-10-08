@@ -40,6 +40,15 @@ spec:
           subPath: sonarr/config
         - name: data
           mountPath: /data
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: "iSCSI"
+                operator: In
+                values:
+                - "true"
       volumes:
       - name: synology-sonarr
         persistentVolumeClaim:
