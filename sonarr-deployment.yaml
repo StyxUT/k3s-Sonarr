@@ -1,5 +1,4 @@
 ---
-apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sonarr
@@ -17,10 +16,19 @@ spec:
       labels:
         app: sonarr
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: tpu
+                operator: NotIn
+                values:
+                - "true"
       containers:
       - name: sonarr
-        imagePullPolicy: "IfNotPresent"
-        image: binhex/arch-sonarr:latest
+        imagePullPolicy: "Always"
+        image: linuxserver/sonarr:latest
         ports:
         - name: http
           containerPort: 8989
@@ -35,22 +43,13 @@ spec:
         - name: UMASK_SET
           value: "022"
         volumeMounts:
-        - name: synology-sonarr
+        - name: synology-iscsi-sonarr
           mountPath: /config
           subPath: sonarr/config
         - name: data
           mountPath: /data
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: "iSCSI"
-                operator: In
-                values:
-                - "true"
       volumes:
-      - name: synology-sonarr
+      - name: synology-iscsi-sonarr
         persistentVolumeClaim:
           claimName: synology-sonarr
       - name: data
